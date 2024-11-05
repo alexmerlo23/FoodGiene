@@ -1,7 +1,13 @@
 [build]
+  base = "Design A/frontend"
   publish = "build"
-  command = "npm run build"
+  command = "npm install && npm run build"
 
 [dev]
   command = "npm start"
-  publish = "build"
+  port = 3000
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
