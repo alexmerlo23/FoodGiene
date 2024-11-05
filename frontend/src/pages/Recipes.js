@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { IngredientsContext } from '../context/IngredientsContext';
 
 const Recipes = () => {
-  const { savedIngredients } = useContext(IngredientsContext);
+  /*const { savedIngredients } = useContext(IngredientsContext);*/
   const [recipes, setRecipes] = useState([]);
   const [calorieMax, setCalorieMax] = useState(500);
   const [carbMax, setCarbMax] = useState(50);
