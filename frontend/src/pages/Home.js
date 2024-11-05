@@ -6,52 +6,53 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [ingredients, setIngredients] = useState([]);
   const [savedIngredients, setSavedIngredients] = useState([]);
-  const [categoryIngredients, setCategoryIngredients] = useState({
-    common: [],
-    vegetables: [],
-    meat: [],
-    dairy: [],
-    grains: []
+
+  // Hardcoded common ingredients for each category
+  const [categoryIngredients] = useState({
+    common: [
+      'Salt', 'Pepper', 'Garlic', 'Onion', 'Olive Oil',
+      'Butter', 'Sugar', 'Flour', 'Eggs', 'Baking Powder'
+    ],
+    vegetables: [
+      'Tomato', 'Broccoli', 'Carrot', 'Green Beans', 'Spinach',
+      'Lettuce', 'Cucumber', 'Bell Pepper', 'Zucchini', 'Asparagus'
+    ],
+    meat: [
+      'Chicken Breast', 'Ground Beef', 'Pork Chop', 'Bacon',
+      'Turkey', 'Lamb', 'Sausage', 'Ham', 'Steak', 'Salmon'
+    ],
+    dairy: [
+      'Milk', 'Cheese', 'Yogurt', 'Butter', 'Cream',
+      'Sour Cream', 'Cottage Cheese', 'Feta', 'Mozzarella', 'Parmesan'
+    ],
+    grains: [
+      'Rice', 'Pasta', 'Oats', 'Bread', 'Quinoa',
+      'Barley', 'Couscous', 'Cornmeal', 'Tortilla', 'Cereal'
+    ],
   });
 
   const API_KEY = '2fa9e870b0df4ed696f377868a757fa5'; // Replace with your actual API key
 
-  // Fetch popular ingredients for each category
+  // Fetch ingredients as the user types (live search)
   useEffect(() => {
-    const fetchIngredientsByCategory = async (query, category) => {
-      try {
-        const response = await fetch(`https://api.spoonacular.com/food/ingredients/search?apiKey=${API_KEY}&query=${query}`);
-        const data = await response.json();
-        setCategoryIngredients((prev) => ({
-          ...prev,
-          [category]: data.results.slice(0, 10) // Keep the top 10 results for scrolling
-        }));
-      } catch (error) {
-        console.error(`Error fetching ${category} ingredients:`, error);
+    const fetchIngredients = async () => {
+      if (searchTerm.trim()) {
+        try {
+          const response = await fetch(
+            `https://api.spoonacular.com/food/ingredients/search?apiKey=${API_KEY}&query=${searchTerm}`
+          );
+          const data = await response.json();
+          setIngredients(data.results || []);
+        } catch (error) {
+          console.error('Error fetching ingredients:', error);
+        }
+      } else {
+        setIngredients([]);
       }
     };
 
-    fetchIngredientsByCategory('common', 'common');
-    fetchIngredientsByCategory('vegetable', 'vegetables');
-    fetchIngredientsByCategory('meat', 'meat');
-    fetchIngredientsByCategory('dairy', 'dairy');
-    fetchIngredientsByCategory('grain', 'grains');
-  }, [API_KEY]);
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      try {
-        const response = await fetch(`https://api.spoonacular.com/food/ingredients/search?apiKey=${API_KEY}&query=${searchTerm}`);
-        const data = await response.json();
-        setIngredients(data.results || []);
-      } catch (error) {
-        console.error('Error fetching ingredients:', error);
-      }
-    } else {
-      setIngredients([]);
-    }
-  };
+    fetchIngredients();
+  }, [searchTerm, API_KEY]);
 
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
@@ -62,8 +63,8 @@ const Home = () => {
   };
 
   const removeIngredient = (ingredientToRemove) => {
-    setSavedIngredients((prev) => 
-      prev.filter((ingredient) => ingredient.name !== ingredientToRemove.name)
+    setSavedIngredients((prev) =>
+      prev.filter((ingredient) => ingredient !== ingredientToRemove)
     );
   };
 
@@ -72,13 +73,28 @@ const Home = () => {
       <div className="left-container">
         <div className="box">
           <h4>Common Ingredients</h4>
+          <div className="ingredient-box">
+            {categoryIngredients.common.map((ingredient, index) => (
+              <div
+                key={index}
+                className="ingredient-item left-ingredient"
+                onClick={() => addIngredient(ingredient)}
+              >
+                {ingredient}
+              </div>
+            ))}
+          </div>
         </div>
         <div className="box">
           <h4>Vegetables</h4>
           <div className="ingredient-box">
-            {categoryIngredients.vegetables.map((ingredient) => (
-              <div key={ingredient.id} className="ingredient-item left-ingredient" onClick={() => addIngredient(ingredient)}>
-                {ingredient.name}
+            {categoryIngredients.vegetables.map((ingredient, index) => (
+              <div
+                key={index}
+                className="ingredient-item left-ingredient"
+                onClick={() => addIngredient(ingredient)}
+              >
+                {ingredient}
               </div>
             ))}
           </div>
@@ -86,9 +102,13 @@ const Home = () => {
         <div className="box">
           <h4>Meat</h4>
           <div className="ingredient-box">
-            {categoryIngredients.meat.map((ingredient) => (
-              <div key={ingredient.id} className="ingredient-item left-ingredient" onClick={() => addIngredient(ingredient)}>
-                {ingredient.name}
+            {categoryIngredients.meat.map((ingredient, index) => (
+              <div
+                key={index}
+                className="ingredient-item left-ingredient"
+                onClick={() => addIngredient(ingredient)}
+              >
+                {ingredient}
               </div>
             ))}
           </div>
@@ -96,9 +116,13 @@ const Home = () => {
         <div className="box">
           <h4>Dairy</h4>
           <div className="ingredient-box">
-            {categoryIngredients.dairy.map((ingredient) => (
-              <div key={ingredient.id} className="ingredient-item left-ingredient" onClick={() => addIngredient(ingredient)}>
-                {ingredient.name}
+            {categoryIngredients.dairy.map((ingredient, index) => (
+              <div
+                key={index}
+                className="ingredient-item left-ingredient"
+                onClick={() => addIngredient(ingredient)}
+              >
+                {ingredient}
               </div>
             ))}
           </div>
@@ -106,28 +130,33 @@ const Home = () => {
         <div className="box">
           <h4>Grains</h4>
           <div className="ingredient-box">
-            {categoryIngredients.grains.map((ingredient) => (
-              <div key={ingredient.id} className="ingredient-item left-ingredient" onClick={() => addIngredient(ingredient)}>
-                {ingredient.name}
+            {categoryIngredients.grains.map((ingredient, index) => (
+              <div
+                key={index}
+                className="ingredient-item left-ingredient"
+                onClick={() => addIngredient(ingredient)}
+              >
+                {ingredient}
               </div>
             ))}
           </div>
         </div>
       </div>
       <div className="search-container">
-        <form onSubmit={handleSearch}>
-          <input
-            type="text"
-            placeholder="Search for ingredients..."
-            value={searchTerm}
-            onChange={handleInputChange}
-          />
-          <button type="submit">Search</button>
-        </form>
+        <input
+          type="text"
+          placeholder="Search for ingredients..."
+          value={searchTerm}
+          onChange={handleInputChange}
+        />
         <div className="ingredients-list">
           {ingredients.length > 0 ? (
             ingredients.map((ingredient) => (
-              <div key={ingredient.id} className="ingredient-item" onClick={() => addIngredient(ingredient)}>
+              <div
+                key={ingredient.id}
+                className="ingredient-item"
+                onClick={() => addIngredient(ingredient.name)}
+              >
                 {ingredient.name}
               </div>
             ))
@@ -141,8 +170,11 @@ const Home = () => {
         <div className="saved-ingredients">
           {savedIngredients.map((ingredient, index) => (
             <div key={index} className="saved-ingredient-item">
-              {ingredient.name}
-              <FaTrash className="trash-icon" onClick={() => removeIngredient(ingredient)} />
+              {ingredient}
+              <FaTrash
+                className="trash-icon"
+                onClick={() => removeIngredient(ingredient)}
+              />
             </div>
           ))}
         </div>
