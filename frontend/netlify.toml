@@ -1,6 +1,6 @@
 [build]
   base = "frontend"            # Base directory for the build process
-  publish = "frontend/build"   # Directory where build artifacts are generated
+  publish = "build"   # Directory where build artifacts are generated
   command = "npm install && npm run build"  # Build command
 
 [dev]
