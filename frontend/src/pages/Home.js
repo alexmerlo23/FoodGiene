@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import '../index.css'; // Import your CSS file for styling
 import { FaTrash } from 'react-icons/fa'; // Import the trash icon
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { IngredientsContext } from '../context/IngredientsContext';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [ingredients, setIngredients] = useState([]);
-  const [savedIngredients, setSavedIngredients] = useState([]);
+  const { savedIngredients, setSavedIngredients } = useContext(IngredientsContext);
 
   // Hardcoded common ingredients for each category
   const [categoryIngredients] = useState({
@@ -31,7 +33,7 @@ const Home = () => {
     ],
   });
 
-  const API_KEY = '2fa9e870b0df4ed696f377868a757fa5'; // Replace with your actual API key
+  const API_KEY = 'd1906924bafb4d909b977e24cf855d32'; // Replace with your actual API key
 
   // Fetch ingredients as the user types (live search)
   useEffect(() => {
@@ -59,7 +61,9 @@ const Home = () => {
   };
 
   const addIngredient = (ingredient) => {
-    setSavedIngredients((prev) => [...prev, ingredient]);
+    if (!savedIngredients.includes(ingredient)) {
+      setSavedIngredients((prev) => [...prev, ingredient]);
+    }
   };
 
   const removeIngredient = (ingredientToRemove) => {
@@ -71,76 +75,23 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="left-container">
-        <div className="box">
-          <h4>Common Ingredients</h4>
-          <div className="ingredient-box">
-            {categoryIngredients.common.map((ingredient, index) => (
-              <div
-                key={index}
-                className="ingredient-item left-ingredient"
-                onClick={() => addIngredient(ingredient)}
-              >
-                {ingredient}
-              </div>
-            ))}
+        {/* Ingredient categories */}
+        {Object.entries(categoryIngredients).map(([category, items]) => (
+          <div className="box" key={category}>
+            <h4>{category.charAt(0).toUpperCase() + category.slice(1)}</h4>
+            <div className="ingredient-box">
+              {items.map((ingredient, index) => (
+                <div
+                  key={index}
+                  className="ingredient-item left-ingredient"
+                  onClick={() => addIngredient(ingredient)}
+                >
+                  {ingredient}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="box">
-          <h4>Vegetables</h4>
-          <div className="ingredient-box">
-            {categoryIngredients.vegetables.map((ingredient, index) => (
-              <div
-                key={index}
-                className="ingredient-item left-ingredient"
-                onClick={() => addIngredient(ingredient)}
-              >
-                {ingredient}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="box">
-          <h4>Meat</h4>
-          <div className="ingredient-box">
-            {categoryIngredients.meat.map((ingredient, index) => (
-              <div
-                key={index}
-                className="ingredient-item left-ingredient"
-                onClick={() => addIngredient(ingredient)}
-              >
-                {ingredient}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="box">
-          <h4>Dairy</h4>
-          <div className="ingredient-box">
-            {categoryIngredients.dairy.map((ingredient, index) => (
-              <div
-                key={index}
-                className="ingredient-item left-ingredient"
-                onClick={() => addIngredient(ingredient)}
-              >
-                {ingredient}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="box">
-          <h4>Grains</h4>
-          <div className="ingredient-box">
-            {categoryIngredients.grains.map((ingredient, index) => (
-              <div
-                key={index}
-                className="ingredient-item left-ingredient"
-                onClick={() => addIngredient(ingredient)}
-              >
-                {ingredient}
-              </div>
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
       <div className="search-container">
         <input
@@ -178,6 +129,15 @@ const Home = () => {
             </div>
           ))}
         </div>
+        <Link
+          to={{
+            pathname: '/recipes',
+            state: { savedIngredients },
+          }}
+          className="view-recipes-button"
+        >
+          View Recipes
+        </Link>
       </div>
     </div>
   );
