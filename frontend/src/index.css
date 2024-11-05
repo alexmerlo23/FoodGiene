@@ -190,6 +190,8 @@ form.signup, form.login {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 .ingredients-list {
@@ -249,7 +251,7 @@ form.signup, form.login {
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 5px;
-  max-height: 200px;
+  max-height: 150px;
   overflow-y: auto;
 }
 
@@ -283,4 +285,38 @@ form.signup, form.login {
 
 .ingredient-item:hover {
   background-color: #e0ffe0;
+}
+
+.recipes-container {
+  padding: 20px;
+}
+
+.recipes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.recipe-item {
+  width: 200px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.recipe-item img {
+  width: 100%;
+  height: auto;
+}
+
+.view-recipes-button{
+ background: var(--primary);
+ margin-top: 15px ;
+  border: 0;
+  color: #fff;
+  padding: 10px;
+  font-family: "Poppins";
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
 }
