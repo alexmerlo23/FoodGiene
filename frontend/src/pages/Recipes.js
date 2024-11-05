@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { IngredientsContext } from '../context/IngredientsContext';
+import React, { useEffect, useState } from 'react';
 
 const Recipes = () => {
   /*const { savedIngredients } = useContext(IngredientsContext);*/
