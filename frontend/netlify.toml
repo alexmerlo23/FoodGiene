@@ -1,11 +1,11 @@
 [build]
-  base = "frontend"
-  publish = "build"
-  command = "npm install && npm run build"
+  base = "frontend"            # Base directory for the build process
+  publish = "frontend/build"   # Directory where build artifacts are generated
+  command = "npm install && npm run build"  # Build command
 
 [dev]
-  command = "npm start"
-  port = 3000
+  command = "npm start"        # Command to run your dev server locally (optional)
+  port = 3000                  # Port for the local development server (optional)
 
 [[redirects]]
   from = "/*"
