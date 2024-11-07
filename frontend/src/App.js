@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <IngredientsProvider>
+      <IngredientsProvider>
           <Navbar />
           <div className="pages">
             <Routes>

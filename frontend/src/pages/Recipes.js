@@ -1,64 +1,98 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { IngredientsContext } from '../context/IngredientsContext';
 
 const Recipes = () => {
-  /*const { savedIngredients } = useContext(IngredientsContext);*/
+  const { savedIngredients } = useContext(IngredientsContext);
   const [recipes, setRecipes] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [calorieMax, setCalorieMax] = useState(500);
   const [carbMax, setCarbMax] = useState(50);
   const [fatMax, setFatMax] = useState(50);
   const [proteinMax, setProteinMax] = useState(50);
-  const [isVegetarian, setIsVegetarian] = useState(false);
-  const [isVegan, setIsVegan] = useState(false);
-  const [isGlutenFree, setIsGlutenFree] = useState(false);
-  const API_KEY = 'd1906924bafb4d909b977e24cf855d32';
+  const API_KEY = 'c4fc55292607408b9662788eb7a8e921'; // Replace with your actual API key
 
   useEffect(() => {
     const fetchRecipes = async () => {
+      if (savedIngredients.length === 0) return; // Don't fetch if there are no saved ingredients
+
       try {
+        // Step 1: Fetch recipes by ingredients with nutritional information
         const response = await fetch(
-          `https://api.spoonacular.com/recipes/findByNutrients?apiKey=${API_KEY}&maxCarbs=${carbMax}&maxFat=${fatMax}&maxProtein=${proteinMax}&number=10`
+          `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=${savedIngredients.join(',')}&number=10`
         );
         const data = await response.json();
-        console.log('Fetched recipes:', data); // Log fetched recipes
-        setRecipes(data);
+        
+        // Log the data to inspect its structure
+        console.log("Fetched data:", data);
+
+        // Ensure data is an array before proceeding
+        if (Array.isArray(data)) {
+          // Step 2: Fetch detailed information (including nutritional info) for each recipe
+          const recipeDetails = await Promise.all(
+            data.map(async recipe => {
+              // Updated request to include nutrition details
+              const recipeInfoResponse = await fetch(
+                `https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${API_KEY}&includeNutrition=true`
+              );
+              const recipeInfo = await recipeInfoResponse.json();
+              console.log("Recipe Info:", recipeInfo);
+              return {
+                ...recipe,
+                // Include nutritional information if available
+                calories: recipeInfo.nutrition?.nutrients.find(nutrient => nutrient.name === 'Calories')?.amount || 'N/A',
+                carbs: recipeInfo.nutrition?.nutrients.find(nutrient => nutrient.name === 'Carbohydrates')?.amount || 'N/A',
+                fat: recipeInfo.nutrition?.nutrients.find(nutrient => nutrient.name === 'Fat')?.amount || 'N/A',
+                protein: recipeInfo.nutrition?.nutrients.find(nutrient => nutrient.name === 'Protein')?.amount || 'N/A',
+              };
+              
+            })
+          );
+
+          console.log('Fetched recipes with nutritional info:', recipeDetails);
+          setRecipes(recipeDetails);
+          setFilteredRecipes(recipeDetails); // Initialize filtered recipes with all fetched recipes
+        } else {
+          console.error("API response is not an array:", data);
+        }
       } catch (error) {
         console.error('Error fetching recipes:', error);
       }
     };
 
     fetchRecipes();
-  }, [API_KEY, carbMax, fatMax, proteinMax]);
+  }, [savedIngredients, API_KEY]);
 
-  // Filter recipes to include only those with images and within the specified calorie max
-  const filteredRecipes = recipes.filter(recipe => {
-    return (
-      recipe.image && // Only include recipes with images
-      recipe.calories <= calorieMax
-    );
-  });
+  // Apply filters to the fetched recipes
+  useEffect(() => {
+    const applyFilters = () => {
+      const filtered = recipes.filter(recipe => {
+        return (
+          ( recipe.calories <= calorieMax) &&
+          ( recipe.carbs <= carbMax) &&
+          ( recipe.fat <= fatMax) &&
+          ( recipe.protein <= proteinMax)
+        );
+      });
+      setFilteredRecipes(filtered);
+    };
 
-  // Further filter based on dietary preferences
-  const dietaryFilteredRecipes = filteredRecipes.filter(recipe => {
-    if (isVegetarian && !recipe.vegetarian) return false;
-    if (isVegan && !recipe.vegan) return false;
-    if (isGlutenFree && !recipe.glutenFree) return false;
-    return true;
-  });
+    applyFilters();
+  }, [calorieMax, carbMax, fatMax, proteinMax, recipes]);
 
   return (
     <div className="recipes-container" style={{ display: 'flex' }}>
       <div className="recipes-list" style={{ flex: '3' }}>
         <h2>Recipes</h2>
-        {dietaryFilteredRecipes.length > 0 ? (
+        {filteredRecipes.length > 0 ? (
           <div className="recipes-list">
-            {dietaryFilteredRecipes.map(recipe => (
+            {filteredRecipes.map(recipe => (
               <div key={recipe.id} className="recipe-item">
                 <h3>{recipe.title}</h3>
                 <img src={recipe.image} alt={recipe.title} />
-                <p>Calories: {recipe.calories}</p>
-                <p>Carbs: {recipe.carbs}</p>
-                <p>Fat: {recipe.fat}</p>
-                <p>Protein: {recipe.protein}</p>
+                <p>Calories: {recipe.calories || 'N/A'}</p>
+                <p>Carbs: {recipe.carbs || 'N/A'}</p>
+                <p>Fat: {recipe.fat || 'N/A'}</p>
+                <p>Protein: {recipe.protein || 'N/A'}</p>
               </div>
             ))}
           </div>
@@ -67,78 +101,52 @@ const Recipes = () => {
         )}
       </div>
 
+      {/* Filters Section */}
       <div className="filters" style={{ flex: '1', padding: '20px', borderLeft: '1px solid #ccc' }}>
         <h3>Filters</h3>
 
         <div>
           <label>Max Calories: {calorieMax}</label>
-          <input 
-            type="range" 
-            min="0" 
-            max="1000" 
-            value={calorieMax} 
-            onChange={e => setCalorieMax(Number(e.target.value))} 
+          <input
+            type="range"
+            min="0"
+            max="1000"
+            value={calorieMax}
+            onChange={e => setCalorieMax(Number(e.target.value))}
           />
         </div>
 
         <div>
           <label>Max Carbohydrates: {carbMax}</label>
-          <input 
-            type="range" 
-            min="0" 
-            max="100" 
-            value={carbMax} 
-            onChange={e => setCarbMax(Number(e.target.value))} 
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={carbMax}
+            onChange={e => setCarbMax(Number(e.target.value))}
           />
         </div>
 
         <div>
           <label>Max Fat: {fatMax}</label>
-          <input 
-            type="range" 
-            min="0" 
-            max="100" 
-            value={fatMax} 
-            onChange={e => setFatMax(Number(e.target.value))} 
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={fatMax}
+            onChange={e => setFatMax(Number(e.target.value))}
           />
         </div>
 
         <div>
           <label>Max Protein: {proteinMax}</label>
-          <input 
-            type="range" 
-            min="0" 
-            max="100" 
-            value={proteinMax} 
-            onChange={e => setProteinMax(Number(e.target.value))} 
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={proteinMax}
+            onChange={e => setProteinMax(Number(e.target.value))}
           />
-        </div>
-
-        <div>
-          <h4>Dietary Preferences</h4>
-          <label>
-            <input 
-              type="checkbox" 
-              checked={isVegetarian} 
-              onChange={() => setIsVegetarian(!isVegetarian)} 
-            /> Vegetarian
-          </label>
-          <br />
-          <label>
-            <input 
-              type="checkbox" 
-              checked={isVegan} 
-              onChange={() => setIsVegan(!isVegan)} 
-            /> Vegan
-          </label>
-          <br />
-          <label>
-            <input 
-              type="checkbox" 
-              checked={isGlutenFree} 
-              onChange={() => setIsGlutenFree(!isGlutenFree)} 
-            /> Gluten Free
-          </label>
         </div>
       </div>
     </div>
