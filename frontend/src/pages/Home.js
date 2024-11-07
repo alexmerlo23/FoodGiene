@@ -33,7 +33,7 @@ const Home = () => {
     ],
   });
 
-  const API_KEY = 'd1906924bafb4d909b977e24cf855d32'; // Replace with your actual API key
+  const API_KEY = 'c4fc55292607408b9662788eb7a8e921'; // Replace with your actual API key
 
   // Fetch ingredients as the user types (live search)
   useEffect(() => {
@@ -62,7 +62,14 @@ const Home = () => {
 
   const addIngredient = (ingredient) => {
     if (!savedIngredients.includes(ingredient)) {
-      setSavedIngredients((prev) => [...prev, ingredient]);
+      // Log the ingredient to the console when added
+      console.log(`Added ingredient: ${ingredient}`);
+      
+      setSavedIngredients((prev) => {
+        const updatedIngredients = [...prev, ingredient];
+        console.log('Current ingredients: ',updatedIngredients);
+        return updatedIngredients;
+      });
     }
   };
 
@@ -75,8 +82,8 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="left-container">
-        {/* Ingredient categories */}
-        {Object.entries(categoryIngredients).map(([category, items]) => (
+         {/* Ingredient categories */}
+         {Object.entries(categoryIngredients).map(([category, items]) => (
           <div className="box" key={category}>
             <h4>{category.charAt(0).toUpperCase() + category.slice(1)}</h4>
             <div className="ingredient-box">
@@ -91,8 +98,9 @@ const Home = () => {
               ))}
             </div>
           </div>
-        ))}
+         ))}
       </div>
+
       <div className="search-container">
         <input
           type="text"
@@ -116,6 +124,7 @@ const Home = () => {
           )}
         </div>
       </div>
+
       <div className="right-container">
         <h3>Saved Ingredients</h3>
         <div className="saved-ingredients">
