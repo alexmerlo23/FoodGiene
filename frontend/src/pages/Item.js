@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 const Item = () => {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
-  const API_KEY = '2fa9e870b0df4ed696f377868a757fa5';
+  const API_KEY = '288946c5fae94c64abe4601fdb271b58';
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -32,10 +32,10 @@ const Item = () => {
       <div className="recipe-content">
         <div className="recipe-content-top">
           <div className="nutrition-info">
-            <p><strong>Calories: </strong> {recipe.nutrition.nutrients.find(n => n.name === 'Calories')?.amount || 'N/A'}</p>
-            <p><strong>Carbs: </strong> {recipe.nutrition.nutrients.find(n => n.name === 'Carbohydrates')?.amount || 'N/A'}</p>
-            <p><strong>Fat: </strong> {recipe.nutrition.nutrients.find(n => n.name === 'Fat')?.amount || 'N/A'}</p>
-            <p><strong>Protein: </strong> {recipe.nutrition.nutrients.find(n => n.name === 'Protein')?.amount || 'N/A'}</p>
+            <p><strong>Calories:</strong> {recipe.nutrition.nutrients.find(n => n.name === 'Calories')?.amount || 'N/A'}</p>
+            <p><strong>Carbs:</strong> {recipe.nutrition.nutrients.find(n => n.name === 'Carbohydrates')?.amount || 'N/A'}</p>
+            <p><strong>Fat:</strong> {recipe.nutrition.nutrients.find(n => n.name === 'Fat')?.amount || 'N/A'}</p>
+            <p><strong>Protein:</strong> {recipe.nutrition.nutrients.find(n => n.name === 'Protein')?.amount || 'N/A'}</p>
           </div>
           <div className="image-container">
             <img src={recipe.image} alt={recipe.title} className="recipe-image" />

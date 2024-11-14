@@ -10,7 +10,7 @@ const Recipes = () => {
   const [carbMax, setCarbMax] = useState(100);
   const [fatMax, setFatMax] = useState(50);
   const [proteinMax, setProteinMax] = useState(50);
-  const API_KEY = '2fa9e870b0df4ed696f377868a757fa5'; // Replace with your actual API key
+  const API_KEY = '288946c5fae94c64abe4601fdb271b58'; // Replace with your actual API key
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -36,7 +36,7 @@ const Recipes = () => {
                 `https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${API_KEY}&includeNutrition=true`
               );
               const recipeInfo = await recipeInfoResponse.json();
-              console.log("Recipe Info:", recipeInfo);
+              console.log("Recipe Info:", recipeInfo);             
               return {
                 ...recipe,
                 // Include nutritional information if available
