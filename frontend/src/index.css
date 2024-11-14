@@ -1,19 +1,24 @@
-/* google font */
+/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
 
-/* layout */
+/* Variables */
 :root {
   --primary: #37e142;
   --error: #e7195a;
 }
+
+/* General Layout */
 body {
   background: #f9f9f9;
   margin: 0;
   font-family: "Poppins";
 }
+
+/* Header */
 header {
   background: #37e142;
 }
+
 header .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -22,25 +27,32 @@ header .container {
   align-items: center;
   justify-content: space-between;
 }
+
 header a {
   color: #ffffff;
   text-decoration: none;
 }
 
-.nav-right a{
+.nav-right a {
   color: #000000;
+  font-size: medium;
+  font-weight: bold;
   text-decoration: none;
+  margin-right: 15px;
 }
 
+/* Page Container */
 .pages {
   max-width: 1400px;
   padding: 20px;
   margin: 0 auto;
 }
 
+/* Input and Form Styling */
 .label, input {
   display: block;
 }
+
 input {
   padding: 10px;
   margin-top: 10px;
@@ -61,6 +73,7 @@ form button {
   cursor: pointer;
 }
 
+/* Error Styling */
 div.error {
   padding: 10px;
   background: #ffefef;
@@ -69,18 +82,21 @@ div.error {
   border-radius: 4px;
   margin: 20px 0;
 }
+
 input.error {
   border: 1px solid var(--error);
 }
 
-/* navbar */
+/* Navbar */
 nav {
   display: flex;
   align-items: center;
 }
+
 nav a, nav button {
   margin-left: 10px;
 }
+
 nav button {
   background: #fff;
   color: var(--primary);
@@ -92,7 +108,7 @@ nav button {
   font-size: 1em;
 }
 
-/* auth forms */
+/* Authentication Forms */
 form.signup, form.login {
   max-width: 400px;
   margin: 40px auto;
@@ -101,29 +117,7 @@ form.signup, form.login {
   border-radius: 4px;
 }
 
-.RoleButtonsContainer {
-  width: 100%;
-  display: inline-flex;
-  gap: 20%;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.role-button {
-  background-color: #fff;
-  color: black;
-  border: 2px solid var(--primary);
-}
-
-.role-button.active {
-  background-color: var(--primary);
-  color: black;
-}
-
-.role-button:hover {
-  background-color: var(--primary);
-}
-
+/* Hamburger Menu */
 .hamburger-container {
   position: relative;
 }
@@ -143,14 +137,6 @@ form.signup, form.login {
   align-items: flex-start;
 }
 
-.menu-content {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
 .hamburger-menu a {
   display: block;
   margin: 20px 0;
@@ -159,164 +145,90 @@ form.signup, form.login {
   text-decoration: none;
 }
 
-.home-container {
-  display: flex;
+/* Recipe Details */
+.recipe-details {
+  max-width: 80%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.left-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 250px;
+.recipe-details h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
 }
 
-.box {
-  width: 200px;
-  padding: 5px;
-  background-color: lightgray;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 5px;
-}
-
-.search-container {
-  flex: 1;
-  margin-right: 20px;
-}
-
-.right-container {
-  width: 250px;
-  background-color: #f0f0f0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-}
-
-.ingredients-list {
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.ingredient-item {
-  padding: 5px;
-  cursor: pointer;
-}
-
-.ingredient-item:hover {
-  background-color: #d1ffd1;
-}
-
-.saved-ingredients {
-  margin-top: 10px;
-}
-
-.saved-ingredient-item {
+/* Recipe Content */
+.recipe-content-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 5px;
-  border: 1px solid #ccc;
-  margin: 2px 0;
-  border-radius: 3px;
+  align-items: flex-start;
+  margin-bottom: 20px;
 }
 
-.trash-icon {
-  cursor: pointer;
-  color: black;
-  margin-left: auto;
+.nutrition-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  grid-template-rows: 1fr 1fr;    /* Two rows */
+  gap: 10px;                      /* Space between quadrants */
+  font-size: 1.0rem;              /* Base font size */
+  height: 100%;                   /* Full height */
+  align-content: start;           /* Align content to the top */
 }
 
-.similar-ingredients {
+.nutrition-info p {
+  font-size: 1.5rem;              /* Font size for nutrient text */
+  font-weight: normal;            /* Regular weight for amounts */
+  margin: 0;
+  display: flex;
+  justify-content: space-between; /* Ensure content is spaced out */
+  align-items: baseline;          /* Align items on the same line */
+}
+
+.nutrition-info p strong {
+  font-size: 1.3rem; /* A font size between large and x-large */
+  font-weight: 600;  /* Bold weight for labels */
+  justify-self: start; /* Align labels to the left */
+}
+
+.nutrition-info p span {
+  font-size: 0.7rem;
+  justify-self: end;             /* Align amounts to the right */
+}
+
+.image-container {
+  max-width: 55%;
+}
+
+.recipe-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Recipe Summary */
+.recipe-summary {
   margin-top: 20px;
 }
 
-.similar-ingredients-list {
-  max-height: 200px;
-  overflow-y: auto;
+/* Recipe Instructions */
+.recipe-instructions h3 {
+  margin-top: 20px;
 }
 
-.similar-ingredients-list .ingredient-item {
-  padding: 5px;
-  cursor: pointer;
+.recipe-instructions ul {
+  list-style: none;
+  padding: 0;
 }
 
-.similar-ingredients-list .ingredient-item:hover {
-  background-color: #d1ffd1;
+.recipe-instructions li {
+  margin: 10px 0;
 }
 
-.ingredient-box {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 5px;
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-.ingredient-box h4 {
-  margin: 0 0 10px;
-  font-weight: 600;
-}
-
-.box-item {
-  cursor: pointer;
-  padding: 3px;
-  margin-bottom: 3px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  background-color: #f9f9f9;
-}
-
-.box-item:hover {
-  background-color: #d1ffd1;
-}
-
-.ingredient-item {
-  cursor: pointer;
-  padding: 5px;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  margin-bottom: 3px;
-  transition: background-color 0.3s;
-}
-
-.ingredient-item:hover {
-  background-color: #e0ffe0;
-}
-
-.recipes-container {
-  padding: 20px;
-}
-
-.recipes-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.recipe-item {
-  width: 200px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: center;
-}
-
-.recipe-item img {
-  width: 100%;
-  height: auto;
-}
-
-.view-recipes-button{
- background: var(--primary);
- margin-top: 15px ;
-  border: 0;
-  color: #fff;
-  padding: 10px;
-  font-family: "Poppins";
-  border-radius: 4px;
-  cursor: pointer;
-  text-decoration: none;
+/* Nutrition Section Styling */
+.nutrition-info h3 {
+  font-size: 1.8em; /* Slightly larger font size for Nutrition header */
+  font-weight: bold;
 }

@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { IngredientsContext } from '../context/IngredientsContext';
+import { Link } from 'react-router-dom';
 
 const Recipes = () => {
   const { savedIngredients } = useContext(IngredientsContext);
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
-  const [calorieMax, setCalorieMax] = useState(500);
-  const [carbMax, setCarbMax] = useState(50);
+  const [calorieMax, setCalorieMax] = useState(1000);
+  const [carbMax, setCarbMax] = useState(100);
   const [fatMax, setFatMax] = useState(50);
   const [proteinMax, setProteinMax] = useState(50);
-  const API_KEY = 'c4fc55292607408b9662788eb7a8e921'; // Replace with your actual API key
+  const API_KEY = '2fa9e870b0df4ed696f377868a757fa5'; // Replace with your actual API key
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -18,7 +19,7 @@ const Recipes = () => {
       try {
         // Step 1: Fetch recipes by ingredients with nutritional information
         const response = await fetch(
-          `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=${savedIngredients.join(',')}&number=10`
+          `https://api.spoonacular.com/recipes/findByIngredients?apiKey=${API_KEY}&ingredients=${savedIngredients.join(',')}&number=20`
         );
         const data = await response.json();
         
@@ -81,25 +82,27 @@ const Recipes = () => {
 
   return (
     <div className="recipes-container" style={{ display: 'flex' }}>
-      <div className="recipes-list" style={{ flex: '3' }}>
-        <h2>Recipes</h2>
-        {filteredRecipes.length > 0 ? (
-          <div className="recipes-list">
-            {filteredRecipes.map(recipe => (
-              <div key={recipe.id} className="recipe-item">
+    <div className="recipes-list" style={{ flex: '3' }}>
+      <h2>Recipes</h2>
+      {filteredRecipes.length > 0 ? (
+        <div className="recipes-list">
+          {filteredRecipes.map(recipe => (
+            <div key={recipe.id} className="recipe-item">
+              <Link to={`/recipes/${recipe.id}`} className='recipe-link'>
                 <h3>{recipe.title}</h3>
                 <img src={recipe.image} alt={recipe.title} />
                 <p>Calories: {recipe.calories || 'N/A'}</p>
                 <p>Carbs: {recipe.carbs || 'N/A'}</p>
                 <p>Fat: {recipe.fat || 'N/A'}</p>
                 <p>Protein: {recipe.protein || 'N/A'}</p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>No recipes found. Try adjusting your filters.</p>
-        )}
-      </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No recipes found. Try adjusting your filters.</p>
+      )}
+    </div>
 
       {/* Filters Section */}
       <div className="filters" style={{ flex: '1', padding: '20px', borderLeft: '1px solid #ccc' }}>

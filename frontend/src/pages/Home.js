@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import '../index.css'; // Import your CSS file for styling
-import { FaTrash } from 'react-icons/fa'; // Import the trash icon
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import React, { useState, useContext } from 'react';
+import '../index.css';
+import { FaTrash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import { IngredientsContext } from '../context/IngredientsContext';
 
 const Home = () => {
@@ -33,28 +33,24 @@ const Home = () => {
     ],
   });
 
-  const API_KEY = 'c4fc55292607408b9662788eb7a8e921'; // Replace with your actual API key
+  const API_KEY = '2fa9e870b0df4ed696f377868a757fa5'; // Replace with your actual API key
 
-  // Fetch ingredients as the user types (live search)
-  useEffect(() => {
-    const fetchIngredients = async () => {
-      if (searchTerm.trim()) {
-        try {
-          const response = await fetch(
-            `https://api.spoonacular.com/food/ingredients/search?apiKey=${API_KEY}&query=${searchTerm}`
-          );
-          const data = await response.json();
-          setIngredients(data.results || []);
-        } catch (error) {
-          console.error('Error fetching ingredients:', error);
-        }
-      } else {
-        setIngredients([]);
+  // Function to fetch ingredients when "Search" button is clicked
+  const fetchIngredients = async () => {
+    if (searchTerm.trim()) {
+      try {
+        const response = await fetch(
+          `https://api.spoonacular.com/food/ingredients/search?apiKey=${API_KEY}&query=${searchTerm}`
+        );
+        const data = await response.json();
+        setIngredients(data.results || []);
+      } catch (error) {
+        console.error('Error fetching ingredients:', error);
       }
-    };
-
-    fetchIngredients();
-  }, [searchTerm, API_KEY]);
+    } else {
+      setIngredients([]);
+    }
+  };
 
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
@@ -62,14 +58,7 @@ const Home = () => {
 
   const addIngredient = (ingredient) => {
     if (!savedIngredients.includes(ingredient)) {
-      // Log the ingredient to the console when added
-      console.log(`Added ingredient: ${ingredient}`);
-      
-      setSavedIngredients((prev) => {
-        const updatedIngredients = [...prev, ingredient];
-        console.log('Current ingredients: ',updatedIngredients);
-        return updatedIngredients;
-      });
+      setSavedIngredients((prev) => [...prev, ingredient]);
     }
   };
 
@@ -104,10 +93,11 @@ const Home = () => {
       <div className="search-container">
         <input
           type="text"
-          placeholder="Search for ingredients..."
+          placeholder="Type ingredient and click search..."
           value={searchTerm}
           onChange={handleInputChange}
         />
+        <button onClick={fetchIngredients}>Search</button>
         <div className="ingredients-list">
           {ingredients.length > 0 ? (
             ingredients.map((ingredient) => (
