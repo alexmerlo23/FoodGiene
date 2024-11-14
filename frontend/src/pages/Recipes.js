@@ -10,7 +10,7 @@ const Recipes = () => {
   const [carbMax, setCarbMax] = useState(100);
   const [fatMax, setFatMax] = useState(50);
   const [proteinMax, setProteinMax] = useState(50);
-  const API_KEY = '288946c5fae94c64abe4601fdb271b58'; // Replace with your actual API key
+  const API_KEY = '6c0b0bb76f3d4fd497c6ca575ffd382b'; // Replace with your actual API key
 
   useEffect(() => {
     const fetchRecipes = async () => {

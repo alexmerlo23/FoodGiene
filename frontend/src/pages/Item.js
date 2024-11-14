@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 const Item = () => {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
-  const API_KEY = '288946c5fae94c64abe4601fdb271b58';
+  const API_KEY = '6c0b0bb76f3d4fd497c6ca575ffd382b';
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
