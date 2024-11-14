@@ -10,7 +10,14 @@ const Recipes = () => {
   const [carbMax, setCarbMax] = useState(100);
   const [fatMax, setFatMax] = useState(50);
   const [proteinMax, setProteinMax] = useState(50);
-  const API_KEY = '6c0b0bb76f3d4fd497c6ca575ffd382b'; // Replace with your actual API key
+
+  // Add states for the dietary filters
+  const [vegan, setVegan] = useState(false);
+  const [vegetarian, setVegetarian] = useState(false);
+  const [glutenFree, setGlutenFree] = useState(false);
+  const [dairyFree, setDairyFree] = useState(false);
+
+  const API_KEY = '6fd23719ea804074a33b7e5af75c9863'; // Replace with your actual API key
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -37,6 +44,7 @@ const Recipes = () => {
               );
               const recipeInfo = await recipeInfoResponse.json();
               console.log("Recipe Info:", recipeInfo);             
+
               return {
                 ...recipe,
                 // Include nutritional information if available
@@ -44,8 +52,8 @@ const Recipes = () => {
                 carbs: recipeInfo.nutrition?.nutrients.find(nutrient => nutrient.name === 'Carbohydrates')?.amount || 'N/A',
                 fat: recipeInfo.nutrition?.nutrients.find(nutrient => nutrient.name === 'Fat')?.amount || 'N/A',
                 protein: recipeInfo.nutrition?.nutrients.find(nutrient => nutrient.name === 'Protein')?.amount || 'N/A',
+                diets: recipeInfo.diets, // Add the diets information to each recipe
               };
-              
             })
           );
 
@@ -67,47 +75,57 @@ const Recipes = () => {
   useEffect(() => {
     const applyFilters = () => {
       const filtered = recipes.filter(recipe => {
+        const matchesVegan = vegan ? recipe.diets.includes('vegan') : true;
+        const matchesVegetarian = vegetarian ? recipe.diets.includes('lacto ovo vegetarian') : true;
+        const matchesGlutenFree = glutenFree ? recipe.diets.includes('gluten free') : true;
+        const matchesDairyFree = dairyFree ? recipe.diets.includes('dairy free') : true;
+
         return (
-          ( recipe.calories <= calorieMax) &&
-          ( recipe.carbs <= carbMax) &&
-          ( recipe.fat <= fatMax) &&
-          ( recipe.protein <= proteinMax)
+          matchesVegan &&
+          matchesVegetarian &&
+          matchesGlutenFree &&
+          matchesDairyFree &&
+          recipe.calories <= calorieMax &&
+          recipe.carbs <= carbMax &&
+          recipe.fat <= fatMax &&
+          recipe.protein <= proteinMax
         );
       });
       setFilteredRecipes(filtered);
     };
 
     applyFilters();
-  }, [calorieMax, carbMax, fatMax, proteinMax, recipes]);
+  }, [calorieMax, carbMax, fatMax, proteinMax, recipes, vegan, vegetarian, glutenFree, dairyFree]);
 
   return (
     <div className="recipes-container" style={{ display: 'flex' }}>
-    <div className="recipes-list" style={{ flex: '3' }}>
-      <h2>Recipes</h2>
-      {filteredRecipes.length > 0 ? (
-        <div className="recipes-list">
-          {filteredRecipes.map(recipe => (
-            <div key={recipe.id} className="recipe-item">
-              <Link to={`/recipes/${recipe.id}`} className='recipe-link'>
-                <h3>{recipe.title}</h3>
-                <img src={recipe.image} alt={recipe.title} />
-                <p>Calories: {recipe.calories || 'N/A'}</p>
-                <p>Carbs: {recipe.carbs || 'N/A'}</p>
-                <p>Fat: {recipe.fat || 'N/A'}</p>
-                <p>Protein: {recipe.protein || 'N/A'}</p>
-              </Link>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p>No recipes found. Try adjusting your filters.</p>
-      )}
-    </div>
+      <div className="recipes-list" style={{ flex: '3' }}>
+        <h2>Recipes</h2>
+        {filteredRecipes.length > 0 ? (
+          <div className="recipes-list">
+            {filteredRecipes.map(recipe => (
+              <div key={recipe.id} className="recipe-item">
+                <Link to={`/recipes/${recipe.id}`} className='recipe-link'>
+                  <h3>{recipe.title}</h3>
+                  <img src={recipe.image} alt={recipe.title} />
+                  <p>Calories: {recipe.calories || 'N/A'}</p>
+                  <p>Carbs: {recipe.carbs || 'N/A'}</p>
+                  <p>Fat: {recipe.fat || 'N/A'}</p>
+                  <p>Protein: {recipe.protein || 'N/A'}</p>
+                </Link>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No recipes found. Try adjusting your filters.</p>
+        )}
+      </div>
 
       {/* Filters Section */}
       <div className="filters" style={{ flex: '1', padding: '20px', borderLeft: '1px solid #ccc' }}>
         <h3>Filters</h3>
-
+        
+        {/* Nutritional Filters */}
         <div>
           <label>Max Calories: {calorieMax}</label>
           <input
@@ -150,6 +168,42 @@ const Recipes = () => {
             value={proteinMax}
             onChange={e => setProteinMax(Number(e.target.value))}
           />
+        </div>
+
+        {/* Dietary Filters */}
+        <div className="diet-filters" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <label>Vegan</label>
+            <input
+              type="checkbox"
+              checked={vegan}
+              onChange={() => setVegan(prev => !prev)}
+            />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <label>Vegetarian</label>
+            <input
+              type="checkbox"
+              checked={vegetarian}
+              onChange={() => setVegetarian(prev => !prev)}
+            />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <label>Gluten Free</label>
+            <input
+              type="checkbox"
+              checked={glutenFree}
+              onChange={() => setGlutenFree(prev => !prev)}
+            />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <label>Dairy Free</label>
+            <input
+              type="checkbox"
+              checked={dairyFree}
+              onChange={() => setDairyFree(prev => !prev)}
+            />
+          </div>
         </div>
       </div>
     </div>
