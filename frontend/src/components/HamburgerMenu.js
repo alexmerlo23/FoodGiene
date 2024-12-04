@@ -13,8 +13,8 @@ const HamburgerMenu = () => {
             <Hamburger toggled={isOpen} toggle={setOpen} size={24} />
           <nav className="menu-content">
             {/* Add links here once Account and Calendar pages are developed */}
-            <Link to="/">Home</Link>
-            <Link to="/">Recipies</Link>
+            <Link to="/home">Home</Link>
+            <Link to="/recipes">Recipies</Link>
           </nav>
         </div>
       )}

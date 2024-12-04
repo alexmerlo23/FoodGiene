@@ -33,7 +33,7 @@ const Home = () => {
     ],
   });
 
-  const API_KEY = '288946c5fae94c64abe4601fdb271b58'; // Replace with your actual API key
+  const API_KEY = 'fd241b80e4a64e83bc1336dc1532be46'; // Replace with your actual API key
 
   // Function to fetch ingredients when "Search" button is clicked
   const fetchIngredients = async () => {
