@@ -5,7 +5,6 @@ import Navbar from "./components/Navbar";
 import Recipes from "./pages/Recipes";
 import Item from "./pages/Item";
 import { IngredientsProvider } from "./context/IngredientsContext";
-import LandingPage from "./pages/LandingPage"; 
 
 function App() {
   return (
